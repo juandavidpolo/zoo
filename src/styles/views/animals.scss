@@ -1,0 +1,14 @@
+.animals--view{
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+  &>.table--sorts{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+  }
+}

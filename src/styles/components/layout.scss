@@ -1,0 +1,10 @@
+.custom--layout {
+  max-width: 100%;
+  width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
+  &>.custom--view{
+    box-sizing: border-box;
+    padding: 30px;
+  }
+}
