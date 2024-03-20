@@ -1,5 +1,6 @@
-import { React } from 'react';
-
+import { React, useState, useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import { updateAnimal } from "src/redux/actions";
 import { Table,
   TableBody,
   TableCell,
@@ -10,15 +11,64 @@ import { Table,
   TextField,
   Button,
   CircularProgress,
-  Box} from '@mui/material';
+  Box,
+  Modal,
+  Typography
+} from '@mui/material';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs from 'dayjs';
 
 const CustomTable = ({
   data,
   filters,
   handleFilters,
-  handleOpenEdit,
   delAnimal,
-  deleting }) => {
+  deleting,
+  updatingAnimal }) => {
+
+  const dispatch = useDispatch();
+
+  const [animal, setAnimal] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [open, setOpen] = useState(false);
+  const handleOpenEdit = (animalToEdit = null) => {
+    setAnimal(animalToEdit)
+  };
+
+  useEffect(() => {
+    if (animal === null) { setOpen(false) } else { setOpen(true) }
+  }, [animal])
+
+  useEffect(() => {
+    if (animal !== null){
+      setAnimal({...animal,
+        next_checkup: selectedDate
+      })
+    }
+  }, [selectedDate])
+
+  const editAnimal = () => {
+    console.log("test: ", animal)
+    dispatch(updateAnimal(animal))
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  };
 
   return (
     <div className='custom--table'>
@@ -92,6 +142,41 @@ const CustomTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+      <Modal
+        open={open}
+        onClose={() => { handleOpenEdit() }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {open && animal !== null &&
+            <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", gap: "10px", }}>
+              <Typography>{`Set new Checkup date and time for ${animal.name}`}</Typography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="Date and Time"
+                  value={selectedDate}
+                  onChange={(newValue) => {
+                    setSelectedDate(newValue);
+                  }}
+                />
+              </LocalizationProvider>
+              <div style={{ display: "flex", flexDirection: "row", gap: "10px", justifyContent: "flex-end", alignItems: "center" }}>
+                <Button variant="contained" onClick={(ev) => { editAnimal() }} disabled={updatingAnimal?true:false}>
+                  {updatingAnimal &&
+                    <Box sx={{ display: 'flex' }}>
+                      <CircularProgress color="inherit" size={15} />
+                    </Box>
+                  }
+                  Save
+                </Button>
+                <Button variant="contained" onClick={() => { handleOpenEdit() }}>Cancel</Button>
+              </div>
+            </div>
+          }
+        </Box>
+      </Modal>
     </div>
   );
 }

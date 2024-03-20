@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
-
 import { Box,
   InputLabel,
   MenuItem,
   FormControl,
-  Select,
-  Modal
+  Select
 } from "@mui/material";
 
 import { useSelector, useDispatch } from "react-redux";
-
-import { getAnimals, deleteAnimal } from "src/redux/actions";
+import { getAnimals, deleteAnimal, updateAnimal } from "src/redux/actions";
 
 import Table from "src/components/custom-table";
-
 import AnimalsSkeleton from "./index-skeleton";
 
 const Animals = () => {
@@ -30,19 +26,6 @@ const Animals = () => {
   })
 
   const [animals, setAnimals] = useState([]);
-  const [animalToEdit, setAnimalEdit] = useState(null);
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
 
   const defaultFilters = [
     {
@@ -143,11 +126,6 @@ const Animals = () => {
     }
   }
 
-  const handleOpenEdit = (animalToEdit=null) => {
-    setAnimalEdit(animalToEdit)
-    setOpenEdit(!openEdit)
-  };
-
   const delAnimal = (id) => {
     dispatch(deleteAnimal(id))
   }
@@ -197,20 +175,10 @@ const Animals = () => {
           data={animals}
           filters={filters}
           handleFilters={handleFilters}
-          handleOpenEdit={handleOpenEdit}
           delAnimal={delAnimal}
-          deleting={homeInfo.deleteAnimal}/>
+          deleting={homeInfo.deleteAnimal}
+          updatingAnimal={homeInfo.updatingAnimal}/>
       </div>
-      <Modal
-        open={openEdit}
-        onClose={() => { handleOpenEdit()}}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          Hello world
-        </Box>
-      </Modal>
     </>
   )
 }

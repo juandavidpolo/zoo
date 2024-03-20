@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { } from "../actions"
-import { getAnimals, deleteAnimal } from "./actions"
+import { getAnimals, deleteAnimal, updateAnimal } from "./actions"
 
 const initialState = {
   loadedFirstTime:false,
   loading:false,
   animals:[],
-  deleting: null
+  deleting: null,
+  updatingAnimal: false
 };
 
 const homeSlice = createSlice({
@@ -36,6 +37,16 @@ const homeSlice = createSlice({
     })
     builder.addCase(deleteAnimal.rejected, (state, action) => {
       state.deleteAnimal = null;
+    })
+
+    builder.addCase(updateAnimal.fulfilled, (state, action) =>{
+      state.updatingAnimal = false;
+    })
+    builder.addCase(updateAnimal.pending, (state, action) => {
+      state.updatingAnimal = true;
+    })
+    builder.addCase(updateAnimal.rejected, (state, action) => {
+      state.updatingAnimal = false;
     })
   }
 });
