@@ -21,6 +21,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 
+import { formatAge, formatDateTime } from "src/utils/helpers";
+
 const CustomTable = ({
   data,
   filters,
@@ -118,11 +120,11 @@ const CustomTable = ({
                 <TableRow key={j}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell component="th" scope="row">{row.name}</TableCell>
-                  <TableCell align="center">{row.age}</TableCell>
+                  <TableCell align="center">{formatAge(row.age)}</TableCell>
                   <TableCell align="center">{row.type}</TableCell>
                   <TableCell align="center">{row.primary_care_taker}</TableCell>
-                  <TableCell align="center">{row.last_checkup}</TableCell>
-                  <TableCell align="center">{row.next_checkup}</TableCell>
+                  <TableCell align="center">{formatDateTime(row.last_checkup)}</TableCell>
+                  <TableCell align="center">{formatDateTime(row.next_checkup)}</TableCell>
                   <TableCell align="center">
                     <div style={{display:"flex", flexDirection:"row", gap:"10px", justifyContent:"center", alignItems:"center"}}>
                       <Button variant="contained" onClick={(() => { handleOpenEdit(row) })}>Edit</Button>

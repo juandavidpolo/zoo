@@ -8,8 +8,7 @@ import { AppBar,
   Menu,
   Container
 } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import PetsIcon from '@mui/icons-material/Pets';
 
 const Navigation = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -27,7 +26,7 @@ const Navigation = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <PetsIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -43,7 +42,7 @@ const Navigation = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            MobileFuse - Zoo
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -73,7 +72,7 @@ const Navigation = () => {
               }}
             ></Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <PetsIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
