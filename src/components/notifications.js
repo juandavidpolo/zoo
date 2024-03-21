@@ -1,45 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 
-import { Grid, Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 
 const Notification = () => {
-  const generalInfo = useSelector((state) => state.general);
+  const notifications = useSelector((state) => state.general.notification);
 
-  const [open, setOpen] = useState(true);
-  const [notification, setNotification] = useState(null);
-
-  const state = {
-    vertical: 'top',
-    horizontal: 'rigth',
-  };
-  const { vertical, horizontal } = state;
+  const [notificationsQueue, setNotificationsQueue] = useState([]);
 
   useEffect(() => {
-    if (generalInfo.notification !== null){
-      setNotification(generalInfo.notification)
+    if (notifications && notifications.length > 0) {
+      setNotificationsQueue(prevQueue => [...prevQueue, ...notifications]);
     }
-  }, [generalInfo.notification])
+  }, [notifications]);
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
+  const handleClose = (id) => {
+    setNotificationsQueue(prevQueue =>
+      prevQueue.filter(notification => notification.id !== id)
+    );
   };
 
   return (
-    <Grid item xs={6} textAlign="right">
-      {notification !== null &&
+    <>
+      {notificationsQueue.map((notification, index) => (
         <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
+          open={true}
           autoHideDuration={5000}
-          onClose={handleClose}
-          key={vertical + horizontal}
+          onClose={() => handleClose(notification.id)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          key={index}
         >
           <Alert
-            onClose={handleClose}
+            onClose={() => handleClose(notification.id)}
             severity={notification.type}
             variant="filled"
             sx={{ width: '100%' }}
@@ -47,8 +39,8 @@ const Notification = () => {
             {notification.message}
           </Alert>
         </Snackbar>
-      }
-    </Grid>
+      ))}
+    </>
   );
 }
 

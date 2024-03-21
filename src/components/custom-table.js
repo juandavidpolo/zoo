@@ -36,9 +36,15 @@ const CustomTable = ({
   const [animal, setAnimal] = useState(null);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(null);
+
   const handleOpenEdit = (animalToEdit = null) => {
     setAnimal(animalToEdit)
   };
+
+  const handleOpenDelete = (id) => {
+    setOpenDelete(id)
+  }
 
   useEffect(() => {
     if (animal === null) { setOpen(false) } else { setOpen(true) }
@@ -52,8 +58,19 @@ const CustomTable = ({
     }
   }, [selectedDate])
 
+  useEffect(() => {
+    if (!updatingAnimal){
+      setOpen(false)
+    }
+  }, [updatingAnimal])
+
+  useEffect(() => {
+    if(deleting===null){
+      setOpenDelete(null)
+    }
+  }, [deleting])
+
   const editAnimal = () => {
-    console.log("test: ", animal)
     dispatch(updateAnimal(animal))
   }
 
@@ -128,12 +145,7 @@ const CustomTable = ({
                   <TableCell align="center">
                     <div style={{display:"flex", flexDirection:"row", gap:"10px", justifyContent:"center", alignItems:"center"}}>
                       <Button variant="contained" onClick={(() => { handleOpenEdit(row) })}>Edit</Button>
-                      <Button variant="contained" onClick={(() => { delAnimal(row.id) })} disabled={ deleting === row.id ? true:false }>
-                        {deleting === row.id &&
-                          <Box sx={{ display: 'flex' }}>
-                            <CircularProgress color="inherit" size={15} />
-                          </Box>
-                        }
+                      <Button variant="contained" onClick={(() => { handleOpenDelete(row) })}>
                         Delete
                       </Button>
                     </div>
@@ -174,6 +186,33 @@ const CustomTable = ({
                   Save
                 </Button>
                 <Button variant="contained" onClick={() => { handleOpenEdit() }}>Cancel</Button>
+              </div>
+            </div>
+          }
+        </Box>
+      </Modal>
+      <Modal
+        open={openDelete}
+        onClose={() => { handleOpenDelete(null) }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {openDelete !== null &&
+            <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", gap: "10px", }}>
+              <Typography>
+                {`Are you sure to delete ${openDelete.name}?`}
+              </Typography>
+              <div style={{ display: "flex", flexDirection: "row", gap: "10px", justifyContent: "flex-end", alignItems: "center" }}>
+                <Button variant="contained" onClick={(ev) => { delAnimal(openDelete.id) }} disabled={deleting === openDelete.id ? true : false}>
+                  {deleting === openDelete.id &&
+                    <Box sx={{ display: 'flex' }}>
+                      <CircularProgress color="inherit" size={15} />
+                    </Box>
+                  }
+                  Delete
+                </Button>
+                <Button variant="contained" onClick={() => { handleOpenDelete(null) }}>Cancel</Button>
               </div>
             </div>
           }

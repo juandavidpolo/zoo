@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { } from "../actions"
 
 const initialState = {
-  notification: null
+  notification: []
 };
 
 const generalsSlice = createSlice({
@@ -11,7 +11,7 @@ const generalsSlice = createSlice({
   initialState: initialState,
   reducers: {
     notification: (state, action) => {
-      state.notification = action.payload
+      state.notification.push(action.payload)
     }
   }
 });
